@@ -60,6 +60,7 @@ h2{
     background-color: #333333;
     padding: 0.5em 1em;
     border-radius: 1em;
+    border: 2px solid #333333;
 }
 
 .btn:hover{
@@ -110,5 +111,9 @@ form label{
 }
 
 .is-invalid{
+    color: red;
+}
+
+.is-invalid input{
     background-color: #FFAAAA;
 }

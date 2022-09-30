@@ -22,7 +22,7 @@ class UserController extends AbstractController
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->renderForm('user/index.html.twig', [
+        return $this->renderForm('user/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
@@ -38,39 +38,56 @@ class UserController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserRepository $userRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
-        $formRegister = $this->createForm(UserRegisterType::class);
-
-        $formRegister->handleRequest($request);
-        if ($formRegister->isSubmitted() && $formRegister->isValid()) {
-            $user = $formRegister->getData();
+        $errors = [];
+        $email = "";
+        $name = "";
+        $firstName = "";
+        if ($request->getMethod() === "POST"){
+            $user = new User();
+            $form = $request->request->all();
+            // set the last data if error get
+            $email = $form['email'];
+            $name = $form['name'];
+            $firstName = $form['firstName'];
             // verif if user with this email exist in database
-            $userExist = $userRepository->findOneBy(['email' => $user->getEmail()]);
-            if($userExist !== null)
-            {
+            $userExist = $userRepository->findOneBy(['email' => $form['email']]);
+            if($userExist !== null){
                 // if user exist return error
-                $errors = ['email' => 'L\'email est déjà utilisé !'];
-                return $this->renderForm('user/register.html.twig', [
-                    'form' => $formRegister,
-                    'errors' => $errors
-                ]);
+                $errors['email'] = 'L\'email est déjà utilisé !';
             }
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $user->getPassword()
-            );
-            $passwordText = $user->getPassword();
-            $user->setPassword($hashedPassword);
+            if(strlen($form['password']) > 6){
+                $hashedPassword = $passwordHasher->hashPassword($user, $form['password']);
+                $user->setPassword($hashedPassword);
+            }else{
+                $errors['password'] = 'Le mot de passe doit contenir au moins 6 caractères !';
+            }
+            $user->setEmail($form['email']);
+            // verification of name is correct
+            if(strlen($form['name']) >= 3 && strlen($form['name']) <= 64){
+                $user->setName($form['name']);
+            }else{
+                $errors['name'] = 'Le Nom doit être composer d\'au moins 3 caractères et moins de 64 caractères';
+            }
+            if(strlen($form['firstName']) >= 3 && strlen($form['firstName']) <= 64){
+                $user->setFirstName($form['firstName']);
+            }else{
+                $errors['firstName'] = 'Le Prénom doit être composer d\'au moins 3 caractères et moins de 64 caractères';
+            }
             $user->setCreatedAt(new \DateTime);
             $user->setUpdatedAt(new \DateTime);
-            $entityManager->persist($user);
-            $entityManager->flush();
-//            dd($passwordHasher->isPasswordValid($user, $passwordText));
-
-//            return $this->redirectToRoute('task_success');
+            // if 0 errors register user in database
+            if(count($errors) === 0){
+                $entityManager->persist($user);
+                $entityManager->flush();
+                return $this->redirectToRoute('app_login');
+            }
         }
 
         return $this->renderForm('user/register.html.twig', [
-            'form' => $formRegister,
+            'errors' => $errors,
+            'last_name' => $name,
+            'last_email' => $email,
+            'last_firstName' => $firstName,
         ]);
     }
 }

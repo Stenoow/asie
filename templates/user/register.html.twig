@@ -6,7 +6,7 @@
 
     <div class="form-title">S'inscrire</div>
 
-    {% if errors is defined %}
+    {% if errors is not empty %}
         <div class="error">
             <ul>
                 {% for key, error in errors %}
@@ -16,15 +16,28 @@
         </div>
     {% endif %}
 
-    {{ form_start(form) }}
-        {{ form_row(form.name, { 'label': 'Nom' }) }}
-        {{ form_row(form.firstName, { 'label': 'Prénom' }) }}
-        {% if errors is defined %}
-            {{ form_row(form.email, {'label': 'Email', 'attr': {'class': 'is-invalid'}}) }}
-        {% else %}
-            {{ form_row(form.email, { 'label': 'Email' }) }}
-        {% endif %}
-        {{ form_row(form.password, { 'label': 'Mot de Passe' }) }}
-        {{ form_row(form.submit, { 'label': 'S\'inscrire' }) }}
-    {{ form_end(form) }}
+    <form action="{{ path('app_register') }}" method="post">
+        <div {% if errors['name'] is defined %}class="is-invalid"{% endif %}>
+            <label for="name">Nom¹ :</label>
+            <input type="text" id="name" name="name" value="{{ last_name }}" minlength="3" required="required" autofocus/>
+        </div>
+        <div {% if errors['firstName'] is defined %}class="is-invalid"{% endif %}>
+            <label for="firstName">Prénom :</label>
+            <input type="text" id="firstName" name="firstName" value="{{ last_firstName }}"/>
+        </div>
+        <div {% if errors['email'] is defined %}class="is-invalid"{% endif %}>
+            <label for="email">Email¹ :</label>
+            <input type="email" id="email" name="email" value="{{ last_email }}" required="required"/>
+        </div>
+        <div {% if errors['password'] is defined %}class="is-invalid"{% endif %}>
+            <label for="password">Mot de Passe¹ :</label>
+            <input type="password" id="password" name="password" required="required" minlength="3"/>
+        </div>
+
+{#        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
+
+        <button type="submit">S'inscrire</button>
+    </form>
+    <small>¹: Obligatoire</small>
+    <p>Déjà inscris ? <a href="{{ path('app_login') }}">Connecte toi</a></p>
 {% endblock %}

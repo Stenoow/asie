@@ -23,7 +23,6 @@ security:
             lazy: true
             provider: app_user_provider
             form_login:
-                # "app_login" is the name of the route created previously
                 login_path: app_login
                 check_path: app_login
             logout:
@@ -41,7 +40,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: ^/admin, roles: ROLE_ADMIN }
+#         - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
