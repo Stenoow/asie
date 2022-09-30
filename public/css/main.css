@@ -45,6 +45,14 @@ main{
 h1{
     text-align: center;
 }
+h2{
+    text-decoration: underline;
+}
+
+.center{
+    margin: 0 auto;
+    width: max-content;
+}
 
 .btn{
     text-decoration: none;
@@ -60,4 +68,47 @@ h1{
 
 .btn-text{
     padding: 0.2em 0.5em;
+}
+
+/* Forms */
+
+form{
+    text-align: center;
+    color: #b2b2b2;
+}
+
+form input{
+    border-radius: 0.5em;
+    border: none;
+    width: 60%;
+    font-size: 1em;
+    padding: 0.5em 1em;
+}
+
+form label{
+    display: block;
+}
+
+.form-title{
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.divider{
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
+
+.error{
+    margin: 1em;
+    background-color: #c07676;
+    color: #111111;
+    padding: 0.2em;
+    border-radius: 1em;
+    border: 2px solid #7c1d1d;
+}
+
+.is-invalid{
+    background-color: #FFAAAA;
 }

@@ -19,7 +19,14 @@
             <nav>
                 <a href="#">Accueil</a>
                 <a href="#">Menu</a>
-                <a href="{{ path('app_login') }}" class="navMenuRight">Se connecter</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_admin') }}" class="navMenuRight">Administration</a>
+                {% endif %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <a href="{{ path('app_logout') }}" class="navMenuRight">Se déconnecter</a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="navMenuRight">Se connecter</a>
+                {% endif %}
             </nav>
         </header>
         <main>

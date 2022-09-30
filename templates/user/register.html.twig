@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}S'inscrire{% endblock %}
+
+{% block body %}
+
+    <div class="form-title">S'inscrire</div>
+
+    {% if errors is defined %}
+        <div class="error">
+            <ul>
+                {% for key, error in errors %}
+                    <li>{{ key }} : {{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {{ form_start(form) }}
+        {{ form_row(form.name, { 'label': 'Nom' }) }}
+        {{ form_row(form.firstName, { 'label': 'Prénom' }) }}
+        {% if errors is defined %}
+            {{ form_row(form.email, {'label': 'Email', 'attr': {'class': 'is-invalid'}}) }}
+        {% else %}
+            {{ form_row(form.email, { 'label': 'Email' }) }}
+        {% endif %}
+        {{ form_row(form.password, { 'label': 'Mot de Passe' }) }}
+        {{ form_row(form.submit, { 'label': 'S\'inscrire' }) }}
+    {{ form_end(form) }}
+{% endblock %}
