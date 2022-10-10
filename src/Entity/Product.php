@@ -26,6 +26,9 @@ class Product
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeProduct $productType = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $brochureFilename = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Product
     public function setProductType(?TypeProduct $productType): self
     {
         $this->productType = $productType;
+
+        return $this;
+    }
+
+    public function getBrochureFilename(): ?string
+    {
+        return $this->brochureFilename;
+    }
+
+    public function setBrochureFilename(?string $brochureFilename): self
+    {
+        $this->brochureFilename = $brochureFilename;
 
         return $this;
     }
