@@ -17,8 +17,8 @@
     <body>
         <header>
             <nav>
-                <a href="#">Accueil</a>
-                <a href="#">Menu</a>
+                <a href="{{ path('app_home') }}">Accueil</a>
+                <a href="{{ path('app_menu') }}">Menu</a>
                 {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('app_admin') }}" class="navMenuRight">Administration</a>
                 {% endif %}
