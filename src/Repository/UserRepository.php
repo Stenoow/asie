@@ -42,6 +42,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
+    public function userHasRole(int $id, $role): bool
+    {
+        $user = $this->createQueryBuilder('u')
+            ->andWhere('u.id = :user AND u.roles LIKE :role')
+            ->setParameter('user', "{$id}")
+            ->setParameter('role', "%{$role}%")
+            ->getQuery()
+            ->getResult();
+
+        if(count($user) >= 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
      */
@@ -56,11 +72,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->add($user, true);
     }
 
-    public function findByName($name)
+    public function findTotal()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByNameTotal(string $name)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('count(u.id)')
+            ->andWhere('u.name LIKE :name OR u.firstName LIKE :name')
+            ->setParameter('name', "%{$name}%")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByName(string $name, int $limit, int $offset)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.name LIKE :name OR u.firstName LIKE :name')
             ->setParameter('name', "%{$name}%")
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
             ->getQuery()
             ->getResult();
     }

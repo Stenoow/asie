@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion de "{{ user.name }}"{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('app_admin_users') }}" class="btn">Retour au menu précédent</a>
+    <h1>Gestion de "{{ user.name }}"</h1>
+    <form action="{{ path('app_admin_update_user') }}" method="POST">
+        <input type="hidden" name="userId" value="{{ user.id }}">
+        <div>
+            <label for="name">Nom: </label>
+            <input type="text" name="name" id="name" value="{{ user.name }}">
+        </div>
+        <div>
+            <label for="firstName">Prénom: </label>
+            <input type="text" name="firstName" id="firstName" value="{{ user.firstName }}">
+        </div>
+        <div>
+            <label for="email">Email: </label>
+            <input type="text" name="email" id="email" value="{{ user.email }}">
+        </div>
+        <div>
+            <label for="admin">Administrateur</label>
+            <input type="checkbox" id="admin" name="admin" {% if is_admin %}checked{% endif %}>
+        </div>
+
+        <button class="btn">Modifier</button>
+
+    </form>
+    {% if app.user == user %}
+        <p>Ceci est votre compte, vous ne pouvez pas vous supprimer !</p>
+    {% else %}
+        <a href="{{ path('app_admin_delete_user', {user: user.id}) }}" class="btn">Supprimer l'utilisateur</a>
+    {% endif %}
+
+{% endblock %}

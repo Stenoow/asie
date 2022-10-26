@@ -39,6 +39,35 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    public function findTotal()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(p.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByNameTotal(string $name)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('count(p.id)')
+            ->andWhere('p.name LIKE :name')
+            ->setParameter('name', "%{$name}%")
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function findByName(string $name, int $limit, int $offset)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.name LIKE :name OR u.firstName LIKE :name')
+            ->setParameter('name', "%{$name}%")
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */

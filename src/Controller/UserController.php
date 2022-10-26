@@ -53,7 +53,7 @@ class UserController extends AbstractController
                 // if user exist return error
                 $errors['email'] = 'L\'email est déjà utilisé !';
             }
-            if(strlen($form['password']) > 6){
+            if(strlen($form['password']) >= 6){
                 $hashedPassword = $passwordHasher->hashPassword($user, $form['password']);
                 $user->setPassword($hashedPassword);
             }else{

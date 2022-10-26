@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Administration Gestion des Produits{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('app_admin') }}" class="btn">Retour au menu précédent</a>
+    <h1>Gestion des produits</h1>
+
+    <form action="{{ path('app_admin_users') }}" method="POST">
+        <input type="text" name="search" id="search" placeholder="Rechercher par Nom/Prénom d'utilisateur">
+        <button class="btn">Rechercher</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if products|length > 0 %}
+            {% for product in products %}
+                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.firstName }}</td>
+                    <td>{{ product.email }}</td>
+                    <td><a href="{{ path('app_admin_users', {user: product.id}) }}" class="btn btn-text">Gérer l'utilisateur</a></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="tr-odd">
+                <td>Personne</td>
+                <td>n'as</td>
+                <td>été</td>
+                <td>trouver !</td>
+                <td>Effectuez une nouvelle recherche !</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        {% for page in range(1, pages) %}
+            <a href="{{ path('app_admin_users', {'page': page}) }}" class="btn {% if page == actual_page %}disabled{% endif %}">{{ page }}</a>
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

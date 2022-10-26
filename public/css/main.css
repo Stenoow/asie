@@ -90,6 +90,10 @@ form label{
     display: block;
 }
 
+form button{
+    cursor: pointer;
+}
+
 .form-title{
     font-size: 2em;
     font-weight: bold;
@@ -116,4 +120,39 @@ form label{
 
 .is-invalid input{
     background-color: #FFAAAA;
+}
+
+table{
+    margin: 2em auto;
+    border-spacing: 0;
+}
+
+thead tr th{
+    border-bottom: 1px solid white;
+}
+
+tbody tr td{
+    text-align: center;
+    border-left: 2px solid black;
+    padding: 0.5em 1em;
+}
+
+.tr-even td{
+    border-bottom: 2px solid white;
+}
+
+.tr-odd td{
+    border-bottom: 2px solid black;
+}
+
+.pagination{
+    text-align: center;
+    border-top: 1px solid white;
+    padding: 1em;
+}
+
+.disabled{
+    pointer-events: none;
+    cursor: default;
+    background-color: #7a7a7a;
 }
