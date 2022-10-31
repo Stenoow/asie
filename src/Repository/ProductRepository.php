@@ -59,8 +59,8 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findByName(string $name, int $limit, int $offset)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.name LIKE :name OR u.firstName LIKE :name')
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.name LIKE :name')
             ->setParameter('name', "%{$name}%")
             ->setMaxResults($limit)
             ->setFirstResult($offset)

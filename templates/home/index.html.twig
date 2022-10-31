@@ -8,7 +8,7 @@
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         <p>Bon retour parmi nous {{ app.user.name }} !</p>
     {% endif %}
-    <div class="center"><a href="#" class="btn">Commander !</a></div>
+    <div class="center"><a href="{{ path('app_menu') }}" class="btn">Commander !</a></div>
     <article>
         <h2>Qui sommes nous ?</h2>
         <p>Nous sommes une société indépendante de vente de sushis sur Nancy!</p>

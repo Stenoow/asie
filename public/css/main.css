@@ -47,6 +47,13 @@ h1{
 }
 h2{
     text-decoration: underline;
+    font-size: 2em;
+    font-weight: bold;
+    font-style: italic;
+}
+
+article{
+    border-bottom: 0.5em solid;
 }
 
 .center{
@@ -61,6 +68,8 @@ h2{
     padding: 0.5em 1em;
     border-radius: 1em;
     border: 2px solid #333333;
+    display: inline-block;
+    margin: 1em 0;
 }
 
 .btn:hover{
@@ -71,6 +80,14 @@ h2{
     padding: 0.2em 0.5em;
 }
 
+.btn-danger{
+    background-color: #690101;
+}
+
+.btn-danger:hover{
+    background-color: #912d2d;
+}
+
 /* Forms */
 
 form{
@@ -78,12 +95,14 @@ form{
     color: #b2b2b2;
 }
 
-form input{
+input{
     border-radius: 0.5em;
     border: none;
     width: 60%;
     font-size: 1em;
     padding: 0.5em 1em;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 form label{
@@ -98,6 +117,28 @@ form button{
     font-size: 2em;
     font-weight: bold;
     text-align: center;
+}
+
+form select{
+    border-radius: 0.5em;
+    border: none;
+    width: 60%;
+    font-size: 1em;
+    padding: 0.5em 1em;
+    text-align-last: center;
+}
+
+.label-file {
+    cursor: pointer;
+    color: #212121;
+    font-weight: bold;
+}
+.label-file:hover {
+    color: #484848;
+}
+
+.input-file {
+   display: none;
 }
 
 .divider{
@@ -145,6 +186,11 @@ tbody tr td{
     border-bottom: 2px solid black;
 }
 
+table img{
+    max-width: 100px;
+    max-height: 100px;
+}
+
 .pagination{
     text-align: center;
     border-top: 1px solid white;
@@ -155,4 +201,36 @@ tbody tr td{
     pointer-events: none;
     cursor: default;
     background-color: #7a7a7a;
+}
+
+.box-flex{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.card{
+    margin: 1em;
+    border: 2px solid black;
+    width: 30%;
+    text-align: center;
+    border-radius: 4em;
+    box-shadow: 2em 1em 2em 0 #3d3d3d;
+    overflow: hidden;
+}
+
+.card:hover{
+    background-color: #4c4c4c;
+}
+
+.card h3{
+    border-bottom: 0.5em solid #dcdcdc;
+    padding: 1em;
+    margin: 0 0 1em;
+}
+
+.card img{
+    width: 128px;
+    height: 128px;
+    border: 3px solid #9b9b9b;
 }

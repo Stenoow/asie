@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création d'un produit{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('app_admin_products') }}" class="btn">Retour au menu précédent</a>
+    <h1>Création d'un nouveau produit !</h1>
+
+    <form action="{{ path('app_admin_product_create') }}" method="POST" enctype="multipart/form-data">
+        <div>
+            <label for="name">Nom: </label>
+            <input type="text" name="name" id="name">
+        </div>
+        <div>
+            <label for="price">Prix : </label>
+            <input type="number" step="0.01" name="price" id="price" placeholder="prix en euros minimum 0€" min="0" max="100" value="5">
+        </div>
+        <div>
+            <label for="type">Type de produit: </label>
+            <select name="type" id="type">
+                {% for type in types %}
+                    <option value="{{ type.id }}">{{ type.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="availability">Disponible ?</label>
+            <input type="checkbox" id="availability" name="availability" checked>
+        </div>
+        <div>
+            <label for="file" class="label-file">Ajouter une image ?</label>
+            <input type="file" id="file" class="input-file" name="file">
+        </div>
+        <button class="btn">Enregistrer le produit</button>
+    </form>
+
+
+
+{% endblock %}

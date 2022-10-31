@@ -4,34 +4,43 @@
 
 {% block body %}
 
-    <a href="{{ path('app_admin_users') }}" class="btn">Retour au menu précédent</a>
-    <h1>Gestion de "{{ user.name }}"</h1>
-    <form action="{{ path('app_admin_update_user') }}" method="POST">
-        <input type="hidden" name="userId" value="{{ user.id }}">
+    <a href="{{ path('app_admin_products') }}" class="btn">Retour au menu précédent</a>
+    <h1>Gestion du produit : "{{ product.name }}"</h1>
+    <form action="{{ path('app_admin_product_update', {product: product.id}) }}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="userId" value="{{ product.id }}">
         <div>
             <label for="name">Nom: </label>
-            <input type="text" name="name" id="name" value="{{ user.name }}">
+            <input type="text" name="name" id="name" value="{{ product.name }}">
         </div>
         <div>
-            <label for="firstName">Prénom: </label>
-            <input type="text" name="firstName" id="firstName" value="{{ user.firstName }}">
+            <label for="price">Prix: </label>
+            <input type="number" step="0.01" name="price" id="price" placeholder="prix en euros minimum 0€" min="0" max="100" value="{{ product.price / 100 }}">
         </div>
         <div>
-            <label for="email">Email: </label>
-            <input type="text" name="email" id="email" value="{{ user.email }}">
+            <label for="type">Type de produit: </label>
+            <select name="type" id="type">
+                {% for type in types %}
+                    <option value="{{ type.id }}" {% if type.id == product.productType.id %}selected{% endif %}>{{ type.name }}</option>
+                {% endfor %}
+            </select>
         </div>
         <div>
-            <label for="admin">Administrateur</label>
-            <input type="checkbox" id="admin" name="admin" {% if is_admin %}checked{% endif %}>
+            <label for="availability">Disponible ?</label>
+            <input type="checkbox" id="availability" name="availability" {% if product.availability %}checked{% endif %}>
+        </div>
+        <div>
+            <label for="file" class="label-file">Image de représentation ?</label>
+            <input type="file" id="file" class="input-file" name="file">
+            {% if product.img %}
+                <p>Image Actuel</p>
+                <img src="{{ asset('./img/' ~product.img) }}" alt="image de {{ product.img }}" width="100">
+            {% endif %}
         </div>
 
         <button class="btn">Modifier</button>
 
     </form>
-    {% if app.user == user %}
-        <p>Ceci est votre compte, vous ne pouvez pas vous supprimer !</p>
-    {% else %}
-        <a href="{{ path('app_admin_delete_user', {user: user.id}) }}" class="btn">Supprimer l'utilisateur</a>
-    {% endif %}
+
+    <a href="{{ path('app_admin_delete_product', {product: product.id}) }}" class="btn btn-danger">Supprimer le produit</a>
 
 {% endblock %}

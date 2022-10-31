@@ -24,7 +24,6 @@
         </tr>
         </thead>
         <tbody>
-        {% if users|length > 0 %}
             {% for user in users %}
                 <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
                     <td>{{ user.name }}</td>
@@ -34,16 +33,15 @@
                     <td>{% if app.user == user %}Ce compte est le votre !{% else %}Non{% endif %}</td>
                     <td><a href="{{ path('app_admin_users', {user: user.id}) }}" class="btn btn-text">Gérer l'utilisateur</a></td>
                 </tr>
+            {% else %}
+                <tr class="tr-odd">
+                    <td>Personne</td>
+                    <td>n'as</td>
+                    <td>été</td>
+                    <td>trouver !</td>
+                    <td>Effectuez une nouvelle recherche !</td>
+                </tr>
             {% endfor %}
-        {% else %}
-            <tr class="tr-odd">
-                <td>Personne</td>
-                <td>n'as</td>
-                <td>été</td>
-                <td>trouver !</td>
-                <td>Effectuez une nouvelle recherche !</td>
-            </tr>
-        {% endif %}
         </tbody>
     </table>
 

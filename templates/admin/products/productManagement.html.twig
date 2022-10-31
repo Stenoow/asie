@@ -7,45 +7,48 @@
     <a href="{{ path('app_admin') }}" class="btn">Retour au menu précédent</a>
     <h1>Gestion des produits</h1>
 
-    <form action="{{ path('app_admin_users') }}" method="POST">
-        <input type="text" name="search" id="search" placeholder="Rechercher par Nom/Prénom d'utilisateur">
+    <form action="{{ path('app_admin_products') }}" method="POST">
+        <input type="text" name="search" id="search" placeholder="Rechercher par Nom de produit" value="{{ last_search }}">
         <button class="btn">Rechercher</button>
     </form>
 
     <table>
         <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Email</th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Type</th>
+                <th>Disponibilité</th>
+                <th>Image</th>
+            </tr>
         </thead>
         <tbody>
-        {% if products|length > 0 %}
             {% for product in products %}
                 <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
                     <td>{{ product.name }}</td>
-                    <td>{{ product.firstName }}</td>
-                    <td>{{ product.email }}</td>
-                    <td><a href="{{ path('app_admin_users', {user: product.id}) }}" class="btn btn-text">Gérer l'utilisateur</a></td>
+                    <td>{{ (product.price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ product.productType.name }}</td>
+                    <td>{% if product.availability %}Disponible{% else %}Non Disponible{% endif %}</td>
+                    <td><img src="{{ asset('./img/' ~product.img) }}" alt="image de {{ product.name }}"></td>
+                    <td><a href="{{ path('app_admin_product_update', {product: product.id}) }}" class="btn btn-text">Gérer le produit</a></td>
+                </tr>
+            {% else %}
+                <tr class="tr-odd">
+                    <td>Aucuns</td>
+                    <td>produits</td>
+                    <td>ne</td>
+                    <td>correspondant !</td>
+                    <td>Effectuez une nouvelle recherche !</td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr class="tr-odd">
-                <td>Personne</td>
-                <td>n'as</td>
-                <td>été</td>
-                <td>trouver !</td>
-                <td>Effectuez une nouvelle recherche !</td>
-            </tr>
-        {% endif %}
         </tbody>
     </table>
 
+    <a href="{{ path('app_admin_product_create') }}" class="btn">Ajouter un produit</a>
+
     <div class="pagination">
         {% for page in range(1, pages) %}
-            <a href="{{ path('app_admin_users', {'page': page}) }}" class="btn {% if page == actual_page %}disabled{% endif %}">{{ page }}</a>
+            <a href="{{ path('app_admin_products', {'page': page}) }}" class="btn {% if page == actual_page %}disabled{% endif %}">{{ page }}</a>
         {% endfor %}
     </div>
 

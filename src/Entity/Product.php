@@ -20,11 +20,14 @@ class Product
     private ?int $price = null;
 
     #[ORM\Column]
-    private ?bool $availablity = null;
+    private ?bool $availability = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?TypeProduct $productType = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $img = null;
 
     public function getId(): ?int
     {
@@ -55,14 +58,14 @@ class Product
         return $this;
     }
 
-    public function isAvailablity(): ?bool
+    public function isAvailability(): ?bool
     {
-        return $this->availablity;
+        return $this->availability;
     }
 
-    public function setAvailablity(bool $availablity): self
+    public function setAvailability(bool $availability): self
     {
-        $this->availablity = $availablity;
+        $this->availability = $availability;
 
         return $this;
     }
@@ -75,6 +78,18 @@ class Product
     public function setProductType(?TypeProduct $productType): self
     {
         $this->productType = $productType;
+
+        return $this;
+    }
+
+    public function getImg(): ?string
+    {
+        return $this->img;
+    }
+
+    public function setImg(?string $img): self
+    {
+        $this->img = $img;
 
         return $this;
     }
