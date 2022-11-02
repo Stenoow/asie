@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nom du produit</th>
+            <th>Prix à l'unité</th>
+            <th>Quantité</th>
+            <th>Prix total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for productOrder in productsOrder %}
+            <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                <td>{{ products[loop.index - 1].name }}</td>
+                <td>{{ (products[loop.index - 1].price / 100)|format_currency('EUR') }}</td>
+                <td>{{ productOrder.quantity }}</td>
+                <td>{{ (productOrder.price / 100)|format_currency('EUR') }}</td>
+            </tr>
+        {% endfor %}
+        <tr class="tr-even"></tr>
+            <tr class="tr-even">
+                <td colspan="3">Total de la commande</td>
+                <td>{{ (totalPrice / 100)|format_currency('EUR') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

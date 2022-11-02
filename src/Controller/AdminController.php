@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

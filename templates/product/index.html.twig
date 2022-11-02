@@ -13,8 +13,13 @@
                         <h3>{{ product.name }}</h3>
                         <img src="{{ asset('img/' ~product.img) }}" alt="image de {{ product.name }}">
                         <p>{{ (product.price / 100)|format_currency('EUR') }}</p>
-                        <input type="number" value="1" min="1" max="20">
-                        <a href="#" class="btn">Ajouter au panier !</a>
+                        <form action="{{ path('app_add_cart') }}" method="get">
+                            <div><input type="number" name="quantity" value="1" min="1" max="20"></div>
+                            <input type="hidden" name="product" value="{{ product.id }}">
+                            <button name="add" class="btn">Ajouter au panier !</button>
+                            <button name="del" class="btn btn-danger">Enlever au panier !</button>
+                        </form>
+                        <p class="anim">{% if cart[product.id] is defined %}Vous en avez {{ cart[product.id] }} dans le panier !{% endif %}</p>
                     </div>
                 {% endfor %}
             </div>

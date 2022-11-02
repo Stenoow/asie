@@ -1,20 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Panier{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Prix à l'unité</th>
+            <th>Quantité</th>
+            <th>Image</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for productCart in cart %}
+            {% for quantity, product in productCart %}
+                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                    <td>{{ product.name }}</td>
+                    <td>{{ (product.price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ quantity }}</td>
+                    <td><img src="{{ asset('./img/' ~product.img) }}" alt="image de {{ product.name }}"></td>
+                    <td><a href="{{ path('app_add_cart', {redirect: 'app_cart', product: product.id, quantity: quantity, del: ""}) }}" class="btn btn-text">Enlever le produit</a></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="tr-odd">
+                <td colspan="4">Votre panier est vide !</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/asie/src/Controller/CartController.php'|file_link(0) }}">src/Controller/CartController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/asie/templates/cart/index.html.twig'|file_link(0) }}">templates/cart/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_validate_cart') }}" class="btn">Valider et payer le panier</a>
+
 {% endblock %}

@@ -22,6 +22,8 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('app_admin') }}" class="navMenuRight">Administration</a>
                 {% endif %}
+                <a href="{{ path('app_cart') }}" class="navMenuRight">Panier</a>
+                <a href="{{ path('app_orders') }}" class="navMenuRight">Commandes</a>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <a href="{{ path('app_logout') }}" class="navMenuRight">Se déconnecter</a>
                 {% else %}
@@ -30,6 +32,14 @@
             </nav>
         </header>
         <main>
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
             {% block body %}{% endblock %}
         </main>
         <footer>

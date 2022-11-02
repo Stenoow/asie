@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+
+    <table>
+        <thead>
+        <tr>
+            <th>Prix Total</th>
+            <th>Status</th>
+            <th>Commander le</th>
+            <th>Mis à jour le</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for orderInfo in orders %}
+            {% for price, order in orderInfo %}
+                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                    <td>{{ (price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ order.status }}</td>
+                    <td>{{ order.createdAt|date("d/m/Y H:m:s") }}</td>
+                    <td>{{ order.updatedAt|date("d/m/Y H:m:s") }}</td>
+                    <td><a href="{{ path('app_order_detail', {orderId: order.id}) }}">Infos sur la commande</a></td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr class="tr-odd">
+                <td colspan="4">Vous n'avez effectuer aucunes commandes pour le moment !</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

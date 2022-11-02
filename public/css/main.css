@@ -234,3 +234,45 @@ table img{
     height: 128px;
     border: 3px solid #9b9b9b;
 }
+
+.flash-success{
+    text-align: center;
+    background-color: #40a740;
+    border: 2px solid darkgreen;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+.flash-error{
+    text-align: center;
+    background-color: #b03f3f;
+    border: 2px solid #721313;
+    border-radius: 1em;
+    padding: 1em;
+}
+
+@keyframes slideCart {
+    from { transform: translateY(0em); }
+    to   { transform: translateY(-3em); }
+
+}
+@keyframes slideCartBack {
+    from { transform: translateY(-3em); }
+    to   { transform: translateY(0em); }
+}
+
+.anim{
+    background-color: #9a9a9a;
+    color: black;
+    border: 3px solid #dcdcdc;
+    bottom: -3em;
+    position: relative;
+    animation: 0.5s linear slideCartBack;
+}
+
+.card:hover .anim{
+    background-color: #9a9a9a;
+    animation: 0.5s linear slideCart;
+    animation-fill-mode: forwards;
+}
+

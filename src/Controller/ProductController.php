@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -91,12 +92,20 @@ class ProductController extends AbstractController
                     );
                     $product->setImg($newFilename);
                 } catch (FileException $e) {
+                    $this->addFlash(
+                        'error',
+                        "L'article \"".$product->getName()."\" n'as pas pu être créer !"
+                    );
                     return $this->redirectToRoute('app_admin_product_create');
                 }
             }
             if(count($errors) === 0){
                 $entityManager->persist($product);
                 $entityManager->flush();
+                $this->addFlash(
+                    'success',
+                    "L'article \"".$product->getName()."\" à bien été créer !"
+                );
                 return $this->redirectToRoute('app_admin_products');
             }
             dd($newFilename);
@@ -158,6 +167,10 @@ class ProductController extends AbstractController
 
             if(count($errors) === 0){
                 $entityManager->flush();
+                $this->addFlash(
+                    'success',
+                    "L'article \"".$product->getName()."\" à bien été mis à jour !"
+                );
                 return $this->redirectToRoute('app_admin_products');
             }
         }
@@ -174,17 +187,22 @@ class ProductController extends AbstractController
     public function userManagementDelete(Request $request, ProductRepository $productRepository, ManagerRegistry $doctrine): Response
     {
         $product = $productRepository->find($request->get('product'));
+        $name = $product->getName();
         $entityManager = $doctrine->getManager();
         if($product !== null){
             $entityManager->remove($product);
             $entityManager->flush();
+            $this->addFlash(
+                'success',
+                "L'article \"".$name."\" à bien été supprimer !"
+            );
         }
 
         return $this->redirectToRoute('app_admin_products', []);
     }
 
     #[Route('/menu', name: 'app_menu')]
-    public function showMenu(ProductRepository $productRepository, TypeProductRepository $typeProductRepository): Response
+    public function showMenu(SessionInterface $session, TypeProductRepository $typeProductRepository): Response
     {
         $types = $typeProductRepository->findAll();
         $productsTypes = [];
@@ -192,8 +210,11 @@ class ProductController extends AbstractController
             $productsTypes[$types[$i]->getName()] = $types[$i]->getProducts()->toArray();
         }
 
+        $cart = $session->get('cart', []);
+
         return $this->render('product/index.html.twig', [
-            'productsTypes' => $productsTypes
+            'productsTypes' => $productsTypes,
+            'cart' => $cart
         ]);
     }
 }
