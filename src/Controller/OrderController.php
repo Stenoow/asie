@@ -75,7 +75,7 @@ class OrderController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/order/{orderId}', name: 'app_order_detail')]
-    public function show_order_detail(int $orderId, OrderRepository $orderRepository, ProductRepository $productRepository): Response
+    public function show_order_detail(int $orderId, OrderRepository $orderRepository): Response
     {
         $userId = $this->getUser()->getId();
         $orderDB = $orderRepository->find($orderId);
@@ -102,5 +102,21 @@ class OrderController extends AbstractController
             'products' => $products,
             'totalPrice' => $price
         ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/deliver/order/{id}', name: 'app_admin_deliver_order')]
+    public function deliver_order(int $id, OrderRepository $orderRepository, ManagerRegistry $doctrine): Response
+    {
+        $order = $orderRepository->find($id);
+        $em = $doctrine->getManager();
+
+        if($order !== null){
+            $order->setStatus('OUT_FOR_DELIVERY');
+            $order->setUpdatedAt(new \DateTime());
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_admin_orders');
     }
 }

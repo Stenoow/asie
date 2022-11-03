@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+
+    <h1>Commandes</h1>
+
+    <form action="{{ path('app_admin_orders') }}" method="get">
+        <label for="status">Rechercher les commandes par status</label>
+        <select name="status" id="status">
+            {% for statu in status %}
+                <option value="{{ loop.index }}" {% if currentStatus == loop.index %}selected{% endif %}>{{ statu }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn">Rechercher</button>
+    </form>
+
+    <div class="container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Id de commande</th>
+                    <th>Status</th>
+                    <th>Mis à jour le</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>{{ order.updatedAt|date("d/m/Y H:m:s") }}</td>
+                        <td><a href="{{ path('app_admin_order_detail', {id: order.id}) }}" class="btn btn-text">Détails de la commande</a></td>
+                        {% if order.status != 'PAYMENT_WAITING' %}
+                            <td><a href="{{ path('app_admin_deliver_order', {id: order.id}) }}" class="btn btn-text">Livrer la commande</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

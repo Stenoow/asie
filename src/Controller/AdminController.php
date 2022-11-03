@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -20,76 +21,49 @@ class AdminController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/users/{page}', name: 'app_admin_users', requirements: ['page' => '\d+'])]
-    public function userManagement(Request $request, UserRepository $userRepository, int $page = 1): Response
+    #[Route('/admin/orders', name: 'app_admin_orders')]
+    public function orders(Request $request, OrderRepository $orderRepository): Response
     {
-        $limit = 10;
-        $offset = ($page - 1) * $limit;
-
-        $search = $request->request->get('search');
-        $selectedUser = $request->get('user');
-        if($selectedUser !== null){
-            $user = $userRepository->find($selectedUser);
-            return $this->render('admin/users/userManagementById.html.twig', [
-                'user' => $user,
-                'is_admin' => $userRepository->userHasRole($selectedUser, 'ROLE_ADMIN')
-            ]);
+        $status = [
+            0 => 'PAYMENT_WAITING',
+            1 => 'PAYMENT_ACCEPTED',
+            2 => 'OUT_FOR_DELIVERY',
+            3 => 'DELIVER',
+        ];
+        if($request->get('status') !== null){
+            $currentStatus = $request->get('status');
+        }else{
+            $currentStatus = 2;
         }
 
-        if($request->getMethod() === "POST" && $search !== null){
-            $users = $userRepository->findByName($search, $limit, $offset);
-            $countUsers = $userRepository->findByNameTotal($search);
-        }
-        else{
-            $users = $userRepository->findBy([], [], $limit, $offset);
-            $countUsers = $userRepository->findTotal();
-        }
+        $orders = $orderRepository->findBy(['status' => $status[$currentStatus - 1]]);
 
-        return $this->render('admin/users/userManagement.html.twig', [
-            'users' => $users,
-            'actual_page' => $page,
-            'pages' => ceil($countUsers / $limit)
+        return $this->render('admin/order/index.html.twig', [
+            'orders' => $orders,
+            'status' => $status,
+            'currentStatus' => $currentStatus
         ]);
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/users/delete', name: 'app_admin_delete_user')]
-    public function userManagementDelete(Request $request, UserRepository $userRepository, ManagerRegistry $doctrine): Response
+    #[Route('/admin/order/{id}', name: 'app_admin_order_detail')]
+    public function order_detail(int $id, OrderRepository $orderRepository): Response
     {
-        $user = $userRepository->find($request->get('user'));
-        $entityManager = $doctrine->getManager();
-        if($user !== null){
-            $entityManager->remove($user);
-            $entityManager->flush();
+        $order = $orderRepository->find($id);
+
+        $products = [];
+        $productsOrder = [];
+        $price = 0;
+        foreach($order->getProductsOrders()->getValues() as $productOrder){
+            $price += $productOrder->getPrice();
+            array_push($productsOrder, $productOrder);
+            array_push($products, $productOrder->getProduct());
         }
 
-        return $this->redirectToRoute('app_admin_users', []);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/users/update', name: 'app_admin_update_user')]
-    public function userManagementUpdate(Request $request, UserRepository $userRepository, ManagerRegistry $doctrine): Response
-    {
-        $userForm = $request->request->all();
-        $entityManager = $doctrine->getManager();
-        if($userForm !== null && count($userForm) > 0){
-            $user = $userRepository->find($userForm['userId']);
-            if(strlen($userForm['name']) > 0 && strlen($userForm['firstName']) > 0){
-                $user->setName($userForm['name']);
-                $user->setFirstName($userForm['firstName']);
-            }
-
-            if(strlen($userForm['email']) > 0){
-                $user->setEmail($userForm['email']);
-            }
-            if(array_key_exists('admin', $userForm) && $userForm['admin'] == "on"){
-                $user->setRoles(['ROLE_ADMIN']);
-            }else{
-                $user->setRoles([]);
-            }
-            $user->setUpdatedAt(new \DateTime);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('app_admin_users', []);
+        return $this->render('admin/order/orderDetails.html.twig', [
+            'productsOrder' => $productsOrder,
+            'products' => $products,
+            'price' => $price
+        ]);
     }
 }

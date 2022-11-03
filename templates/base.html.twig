@@ -19,6 +19,7 @@
             <nav>
                 <a href="{{ path('app_home') }}">Accueil</a>
                 <a href="{{ path('app_menu') }}">Menu</a>
+                <a href="{{ path('app_custom_box') }}">Boîte Mesure</a>
                 {% if is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('app_admin') }}" class="navMenuRight">Administration</a>
                 {% endif %}

@@ -217,4 +217,10 @@ class ProductController extends AbstractController
             'cart' => $cart
         ]);
     }
+
+    #[Route('/custom-box', name: 'app_custom_box')]
+    public function customBox(): Response
+    {
+        return $this->render('product/customBox.html.twig', []);
+    }
 }

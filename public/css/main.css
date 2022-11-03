@@ -61,33 +61,6 @@ article{
     width: max-content;
 }
 
-.btn{
-    text-decoration: none;
-    color: white;
-    background-color: #333333;
-    padding: 0.5em 1em;
-    border-radius: 1em;
-    border: 2px solid #333333;
-    display: inline-block;
-    margin: 1em 0;
-}
-
-.btn:hover{
-    background-color: #7a7a7a;
-}
-
-.btn-text{
-    padding: 0.2em 0.5em;
-}
-
-.btn-danger{
-    background-color: #690101;
-}
-
-.btn-danger:hover{
-    background-color: #912d2d;
-}
-
 /* Forms */
 
 form{
@@ -163,27 +136,36 @@ form select{
     background-color: #FFAAAA;
 }
 
-table{
-    margin: 2em auto;
-    border-spacing: 0;
+/* All tables css */
+
+table {
+    margin: auto;
+    width: 80%;
+    border-collapse: collapse;
+    overflow: hidden;
+    box-shadow: 0 0 1.2em rgba(0,0,0,0.1);
 }
 
-thead tr th{
-    border-bottom: 1px solid white;
+th, td {
+    padding: 1em;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
 }
 
-tbody tr td{
+th {
+    text-align: left;
+}
+
+thead, th {
+    background-color: #212121;
+}
+
+tbody tr:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+table a{
     text-align: center;
-    border-left: 2px solid black;
-    padding: 0.5em 1em;
-}
-
-.tr-even td{
-    border-bottom: 2px solid white;
-}
-
-.tr-odd td{
-    border-bottom: 2px solid black;
 }
 
 table img{
@@ -197,10 +179,40 @@ table img{
     padding: 1em;
 }
 
+/* buttons */
+
 .disabled{
     pointer-events: none;
     cursor: default;
     background-color: #7a7a7a;
+}
+
+.btn{
+    text-decoration: none;
+    color: white;
+    background-color: #333333;
+    padding: 0.5em 1em;
+    border-radius: 1em;
+    border: 2px solid #333333;
+    display: inline-block;
+    margin: 1em 0;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: #7a7a7a;
+}
+
+.btn-text{
+    padding: 0.2em 0.5em;
+}
+
+.btn-danger{
+    background-color: #690101;
+}
+
+.btn-danger:hover{
+    background-color: #912d2d;
 }
 
 .box-flex{
@@ -254,7 +266,6 @@ table img{
 @keyframes slideCart {
     from { transform: translateY(0em); }
     to   { transform: translateY(-3em); }
-
 }
 @keyframes slideCartBack {
     from { transform: translateY(-3em); }
@@ -276,3 +287,11 @@ table img{
     animation-fill-mode: forwards;
 }
 
+#food-list{
+    position: absolute;
+    top: 30%;
+}
+
+#food-list li{
+    list-style: none;
+}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande n°{{ productsOrder[0].orderId.id }}{% endblock %}
+
+{% block body %}
+
+    <h1>Commandes</h1>
+
+    <a href="{{ path('app_admin_orders') }}" class="btn">Retour</a>
+
+    <div class="container">
+        <table>
+            <thead>
+            <tr>
+                <th>Nom du Produit</th>
+                <th>Quantité</th>
+                <th>Prix à l'unité</th>
+                <th>Prix Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ productsOrder[loop.index - 1].quantity }}</td>
+                    <td>{{ (product.price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ (productsOrder[loop.index - 1].price / 100)|format_currency('EUR') }}</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="3">Total de la commande</td>
+                <td>{{ (price / 100)|format_currency('EUR') }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
