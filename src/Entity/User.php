@@ -46,9 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: CustomBox::class, orphanRemoval: true)]
+    private Collection $customBoxes;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->customBoxes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +199,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CustomBox>
+     */
+    public function getCustomBoxes(): Collection
+    {
+        return $this->customBoxes;
+    }
+
+    public function addCustomBox(CustomBox $customBox): self
+    {
+        if (!$this->customBoxes->contains($customBox)) {
+            $this->customBoxes->add($customBox);
+            $customBox->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCustomBox(CustomBox $customBox): self
+    {
+        if ($this->customBoxes->removeElement($customBox)) {
+            // set the owning side to null (unless already changed)
+            if ($customBox->getUser() === $this) {
+                $customBox->setUser(null);
+            }
+        }
 
         return $this;
     }

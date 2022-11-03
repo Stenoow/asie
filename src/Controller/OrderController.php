@@ -29,6 +29,7 @@ class OrderController extends AbstractController
             $entityManager->persist($order);
             $entityManager->flush();
             $session->set('cart', []);
+            $session->set('customBox', []);
             $this->addFlash(
                 'success',
                 'La commande à bien été valider et le paiement également ! Merci !'
@@ -39,10 +40,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orderCanceled', name: 'app_order_cancel')]
-    public function cancel_paiement(
-        OrderRepository $orderRepository,
-        ManagerRegistry $doctrine,
-        SessionInterface $session): Response
+    public function cancel_paiement(): Response
     {
         $this->addFlash(
             'error',
@@ -88,19 +86,26 @@ class OrderController extends AbstractController
         }
 
         $products = [];
+        $customsBox = [];
         $productsOrder = [];
         $price = 0;
         foreach($orderDB->getProductsOrders()->getValues() as $productOrder){
             $price += $productOrder->getPrice();
             array_push($productsOrder, $productOrder);
-            array_push($products, $productOrder->getProduct());
+            if($productOrder->getProduct() === null){
+                array_push($customsBox, $productOrder->getCustomBox());
+            }else{
+                array_push($products, $productOrder->getProduct());
+            }
         }
 //        dd($products, $productsOrder);
 
         return $this->render('order/orderDetail.html.twig', [
             'productsOrder' => $productsOrder,
             'products' => $products,
-            'totalPrice' => $price
+            'totalPrice' => $price,
+            'customsBox' => $customsBox,
+            'price' => $price
         ]);
     }
 

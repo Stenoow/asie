@@ -29,6 +29,17 @@
                 <td colspan="4">Votre panier est vide !</td>
             </tr>
         {% endfor %}
+        {% for customBoxCart in customsBox %}
+            {% for quantity, customBox in customBoxCart%}
+                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                    <td>Boîte Customiser par vos soins !</td>
+                    <td>{{ (customBox.price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ quantity }}</td>
+                    <td></td>
+                    <td>Vous n'avez pas la possibilité de l'enlever de votre panier pour le moment ! Excusez nous pour le désagrément !</td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 

@@ -21,7 +21,7 @@
                     <td>{{ order.status }}</td>
                     <td>{{ order.createdAt|date("d/m/Y H:m:s") }}</td>
                     <td>{{ order.updatedAt|date("d/m/Y H:m:s") }}</td>
-                    <td><a href="{{ path('app_order_detail', {orderId: order.id}) }}">Infos sur la commande</a></td>
+                    <td><a href="{{ path('app_order_detail', {orderId: order.id}) }}" class="btn btn-text">Infos sur la commande</a></td>
                 </tr>
             {% endfor %}
         {% else %}

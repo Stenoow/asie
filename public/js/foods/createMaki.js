@@ -21,5 +21,6 @@ export default function createMaki(){
         side: THREE.DoubleSide
     }));
     mesh.name = 'maki';
+    mesh.productId = 1;
     return mesh;
 }

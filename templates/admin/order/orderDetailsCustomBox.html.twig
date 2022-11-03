@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boite Custom{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+    <script src="../../../js/libraries/three.min.js"></script>
+    <script type="module" src="../../../js/main.js"></script>
+{% endblock %}
+
+{% block body %}
+
+    <a href="{{ path('app_admin_orders') }}" class="btn">Retour</a>
+    <input type="hidden" id="customBox" value="{{ positions|json_encode() }}">
+    <div id="ThreeJS">
+
+    </div>
+    <ul id="food-list">
+        <li><p class="btn" data-type="1">Maki Saumon Avocat</p></li>
+        <li><p class="btn" data-type="7">Nagiri Saumon</p></li>
+    </ul>
+
+
+{% endblock %}

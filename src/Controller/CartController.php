@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\CustomBox;
 use App\Entity\Order;
 use App\Entity\ProductsOrder;
+use App\Repository\CustomBoxRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,19 +18,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class CartController extends AbstractController
 {
     #[Route('/cart', name: 'app_cart')]
-    public function index(SessionInterface $session, ProductRepository $productRepository): Response
+    public function index(SessionInterface $session,
+                          ProductRepository $productRepository,
+                          CustomBoxRepository $customBoxRepository): Response
     {
         $sessionCart = $session->get('cart', []);
+        $sessionCustomBox = $session->get('customBox', []);
 
         $cart = [];
         foreach($sessionCart as $productId => $quantity){
             $product = $productRepository->find($productId);
             $cart[$productId] = [$quantity => $product];
         }
+        $customsBox = [];
+        foreach($sessionCustomBox as $customBoxId => $quantity){
+            $customBox = $customBoxRepository->find($customBoxId);
+            $customsBox[$customBoxId] = [$quantity => $customBox];
+        }
 
         return $this->render('cart/index.html.twig', [
             'cart' => $cart,
-            'sessionCart' => $sessionCart
+            'customsBox' => $customsBox
         ]);
     }
 
@@ -71,6 +81,45 @@ class CartController extends AbstractController
         return $this->redirectToRoute($redirect);
     }
 
+    #[Route('/cart/customBox/{redirect}', name: 'app_add_cart_custom_box')]
+    public function addToCartCustomeBox(Request $request,
+                                        ManagerRegistry $doctrine,
+                                        SessionInterface $session,
+                                        UserRepository $userRepository,
+                                        ProductRepository $productRepository,
+                                        string $redirect = 'app_menu'): Response
+    {
+        $positions = json_decode($request->request->get('json'), true);
+
+        $customBox = new CustomBox();
+        $price = 0;
+        foreach($positions as $x => $positionZ){
+            foreach ($positionZ as $z => $productId){
+                $product = $productRepository->find($productId);
+                if($product !== null){
+                    $price += $product->getPrice();
+                }else{
+                    unset($positions[$x][$z]);
+                }
+            }
+        }
+        if($price > 0){
+            $customBox->setPositions($positions);
+            // add 3€ for create a custom box
+            $customBox->setPrice($price + 300);
+            $user = $userRepository->find($this->getUser()->getId());
+            $customBox->setUser($user);
+            $em = $doctrine->getManager();
+            $em->persist($customBox);
+            $em->flush();
+            $sessionCustomBox = $session->get('customBox', []);
+            $sessionCustomBox[$customBox->getId()] = 1;
+            $session->set('customBox', $sessionCustomBox);
+        }
+
+        return $this->redirectToRoute($redirect);
+    }
+
 
     #[Route('/cart/validate', name: 'app_validate_cart')]
     public function validateCart(
@@ -78,12 +127,14 @@ class CartController extends AbstractController
         UserRepository $userRepository,
         SessionInterface $session,
         ProductRepository $productRepository,
+        CustomBoxRepository $customBoxRepository,
         ManagerRegistry $doctrine): Response
     {
         $cart = $session->get('cart', []);
+        $customsBox = $session->get('customBox', []);
         $userId = $this->getUser()->getId();
 
-        if(count($cart) < 1){
+        if(count($cart) < 1 && count($customsBox) < 1){
             dd($cart);
         }
 
@@ -112,6 +163,24 @@ class CartController extends AbstractController
             $productOrder->setOrderId($order);
             $productOrder->setQuantity($quantity);
             $productOrder->setPrice($quantity * $product->getPrice());
+            $entityManager->persist($productOrder);
+        }
+        foreach($customsBox as $customBoxId => $quantity){
+            $customBox = $customBoxRepository->find($customBoxId);
+            $products[] =
+                ['price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => 'Boîte Customiser par vos soins !'
+                    ],
+                    'unit_amount' => $customBox->getPrice()
+                ],
+                'quantity' => $quantity];
+            $productOrder = new ProductsOrder();
+            $productOrder->setCustomBox($customBox);
+            $productOrder->setOrderId($order);
+            $productOrder->setQuantity($quantity);
+            $productOrder->setPrice($quantity * $customBox->getPrice());
             $entityManager->persist($productOrder);
         }
 

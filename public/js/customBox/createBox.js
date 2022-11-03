@@ -15,8 +15,11 @@ export default function createBox(){
         box.push(boxClone);
     }
 
-    return Utils.createMergedGeometry(box, new THREE.MeshLambertMaterial({
+    let mesh = Utils.createMergedGeometry(box, new THREE.MeshLambertMaterial({
         vertexColors: THREE.VertexColors,
         side: THREE.DoubleSide
     }));
+    // set name for with a click on this he don't remove
+    mesh.name = 'box';
+    return mesh;
 }

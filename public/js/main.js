@@ -15,9 +15,9 @@ function init() {
         0.1,
         2500);
 
-    camera.position.x = 15;
+    camera.position.x = 10;
     camera.position.y = 20;
-    camera.position.z = 15;
+    camera.position.z = 10;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
     scene = new THREE.Scene();
@@ -26,10 +26,7 @@ function init() {
     // ========== MAIN CODE ==============
 
     // create objects in 3D
-
     let box = createBox();
-    // set name for with a click on this he don't remove
-    box.name = 'box';
     scene.add(box);
 
     // ======== Light ================
@@ -51,13 +48,14 @@ function init() {
 
     //====== ORBIT CONTROL ============
 
-    // controls = new OrbitControls(camera, renderer.domElement);
+    // let controls = new OrbitControls(camera, renderer.domElement);
+    // controls.enabled = false;
 
     // if the client resize the window the canvas resize too
     window.addEventListener( 'resize', () => Utils.onWindowResize(camera, renderer, scene));
 
-    // let assemblyBox = new AssemblyBox();
-    // assemblyBox.initiateEventClick(renderer, scene, camera);
+    let assemblyBox = new AssemblyBox(scene);
+    assemblyBox.initiateEventClick(renderer, scene, camera);
 
     // add the canvas of three js in html
     var container = document.getElementById( 'ThreeJS' );

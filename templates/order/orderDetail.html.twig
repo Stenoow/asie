@@ -15,11 +15,22 @@
         </thead>
         <tbody>
         {% for productOrder in productsOrder %}
-            <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
-                <td>{{ products[loop.index - 1].name }}</td>
-                <td>{{ (products[loop.index - 1].price / 100)|format_currency('EUR') }}</td>
-                <td>{{ productOrder.quantity }}</td>
-                <td>{{ (productOrder.price / 100)|format_currency('EUR') }}</td>
+            {% if products|length > 0 %}
+                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                    <td>{{ products[loop.index - 1].name }}</td>
+                    <td>{{ (products[loop.index - 1].price / 100)|format_currency('EUR') }}</td>
+                    <td>{{ productOrder.quantity }}</td>
+                    <td>{{ (productOrder.price / 100)|format_currency('EUR') }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        {% for customBox in customsBox %}
+            <tr>
+                <td>Boîte customiser</td>
+                <td>{{ productsOrder[products | length + loop.index - 1].quantity }}</td>
+                <td>{{ (customBox.price / 100)|format_currency('EUR') }}</td>
+                <td>{{ (productsOrder[products | length + loop.index - 1].price / 100)|format_currency('EUR') }}</td>
+                <td><a href="{{ path('app_admin_order_detail_custom_box', {id: customBox.id}) }}" class="btn btn-text">Voir la boîte customiser</a></td>
             </tr>
         {% endfor %}
         <tr class="tr-even"></tr>

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Menu{% endblock %}
+{% block title %}Boite Customiser{% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('app') }}
@@ -11,13 +11,17 @@
 {% block body %}
 
     <h1>Sélectionnez vos sushis et disposez les comme vous le souhaitez dans la boîte !</h1>
+    <form action="{{ path('app_add_cart_custom_box') }}" method="post" id="validate-box">
+        <input type="hidden" id="customBox" value="">
+        <input type="hidden" name="json" id="json-validate" value="">
+        <button class="btn">Valider la boîte !</button>
+    </form>
     <div id="ThreeJS">
 
     </div>
     <ul id="food-list">
         <li><p class="btn" data-type="1">Maki Saumon Avocat</p></li>
-        <li><p class="btn" data-type="2">Nagiri Saumon</p></li>
-{#        <li><p class="btn">Maki</p></li>#}
+        <li><p class="btn" data-type="7">Nagiri Saumon</p></li>
     </ul>
 
 

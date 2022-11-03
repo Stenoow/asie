@@ -26,6 +26,9 @@ class ProductsOrder
     #[ORM\JoinColumn(nullable: false)]
     private ?Order $orderId = null;
 
+    #[ORM\ManyToOne(inversedBy: 'productsOrders')]
+    private ?CustomBox $customBox = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class ProductsOrder
     public function setOrderId(?Order $orderId): self
     {
         $this->orderId = $orderId;
+
+        return $this;
+    }
+
+    public function getCustomBox(): ?CustomBox
+    {
+        return $this->customBox;
+    }
+
+    public function setCustomBox(?CustomBox $customBox): self
+    {
+        $this->customBox = $customBox;
 
         return $this;
     }

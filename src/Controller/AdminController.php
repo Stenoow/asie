@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CustomBoxRepository;
 use App\Repository\OrderRepository;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -52,18 +53,35 @@ class AdminController extends AbstractController
         $order = $orderRepository->find($id);
 
         $products = [];
+        $customsBox = [];
         $productsOrder = [];
         $price = 0;
         foreach($order->getProductsOrders()->getValues() as $productOrder){
             $price += $productOrder->getPrice();
             array_push($productsOrder, $productOrder);
-            array_push($products, $productOrder->getProduct());
+            if($productOrder->getProduct() === null){
+                array_push($customsBox, $productOrder->getCustomBox());
+            }else{
+                array_push($products, $productOrder->getProduct());
+            }
         }
 
         return $this->render('admin/order/orderDetails.html.twig', [
             'productsOrder' => $productsOrder,
             'products' => $products,
+            'customsBox' => $customsBox,
             'price' => $price
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/customBox/{id}', name: 'app_admin_order_detail_custom_box')]
+    public function order_detail_custom_box(int $id, CustomBoxRepository $customBoxRepository): Response
+    {
+        $customBox = $customBoxRepository->find($id);
+
+        return $this->render('admin/order/orderDetailsCustomBox.html.twig', [
+            'positions' => $customBox->getPositions(),
         ]);
     }
 }

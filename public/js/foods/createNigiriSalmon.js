@@ -41,5 +41,6 @@ export default function createNigiriSalmon(){
     }));
     mesh.rotateY(Utils.degreesToRadians(45));
     mesh.name = 'nigiri';
+    mesh.productId = 7;
     return mesh;
 }
