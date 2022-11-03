@@ -30,7 +30,7 @@
                 <td>{{ productsOrder[products | length + loop.index - 1].quantity }}</td>
                 <td>{{ (customBox.price / 100)|format_currency('EUR') }}</td>
                 <td>{{ (productsOrder[products | length + loop.index - 1].price / 100)|format_currency('EUR') }}</td>
-                <td><a href="{{ path('app_admin_order_detail_custom_box', {id: customBox.id}) }}" class="btn btn-text">Voir la boîte customiser</a></td>
+                <td><a href="{{ path('app_order_detail_custom_box', {id: customBox.id}) }}" class="btn btn-text">Voir la boîte customiser</a></td>
             </tr>
         {% endfor %}
         <tr class="tr-even"></tr>

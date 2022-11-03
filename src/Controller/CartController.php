@@ -45,10 +45,16 @@ class CartController extends AbstractController
     #[Route('/cart/add/{redirect}', name: 'app_add_cart')]
     public function addToCart(Request $request, SessionInterface $session, ProductRepository $productRepository, string $redirect = 'app_menu'): Response
     {
-        $product = $request->get('product');
+        $productId = $request->get('product');
+        $product = null;
+        $customBoxId = $request->get('customBox');
         $quantity = $request->get('quantity');
         $cart = $session->get('cart', []);
-        $productName = $productRepository->find($product)->getName();
+        $customsBoxCart = $session->get('customBox', []);
+        if($productId !== null){
+            $product = $productRepository->find($productId);
+            $productName = $product->getName();
+        }
 
         // if click on delete button and product is in cart
         if($request->get('del') !== null && array_key_exists($product, $cart)){
@@ -58,10 +64,20 @@ class CartController extends AbstractController
             }else{
                 unset($cart[$product]);
             }
-
             $this->addFlash(
                 'success',
                 "L'article \"$productName\" à bien été supprimer du panier !"
+            );
+        }else if($request->get('del') !== null && array_key_exists($customBoxId, $customsBoxCart)){
+            if($quantity < $customsBoxCart[$customBoxId]){
+                $customsBoxCart[$customBoxId] -= $quantity;
+            }else{
+                unset($customsBoxCart[$customBoxId]);
+            }
+
+            $this->addFlash(
+                'success',
+                "L'article \"Boîte Customiser\" à bien été supprimer du panier !"
             );
         }else if($request->get('add') !== null){
             if(array_key_exists($product, $cart)){
@@ -77,12 +93,13 @@ class CartController extends AbstractController
         }
 
         $session->set('cart', $cart);
+        $session->set('customBox', $customsBoxCart);
 
         return $this->redirectToRoute($redirect);
     }
 
     #[Route('/cart/customBox/{redirect}', name: 'app_add_cart_custom_box')]
-    public function addToCartCustomeBox(Request $request,
+    public function addToCartCustomBox(Request $request,
                                         ManagerRegistry $doctrine,
                                         SessionInterface $session,
                                         UserRepository $userRepository,

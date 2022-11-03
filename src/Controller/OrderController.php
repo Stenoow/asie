@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Repository\CustomBoxRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -106,6 +108,22 @@ class OrderController extends AbstractController
             'totalPrice' => $price,
             'customsBox' => $customsBox,
             'price' => $price
+        ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/admin/customBox/{id}', name: 'app_order_detail_custom_box')]
+    public function order_detail_custom_box(int $id, Request $request, CustomBoxRepository $customBoxRepository): Response
+    {
+        $customBox = $customBoxRepository->find($id);
+
+
+        if($customBox->getUser()->getId() !== $this->getUser()->getId()){
+            return $this->redirect($request->headers->get('referer'));
+        }
+
+        return $this->render('admin/order/orderDetailsCustomBox.html.twig', [
+            'positions' => $customBox->getPositions(),
         ]);
     }
 

@@ -14,32 +14,35 @@
         </tr>
         </thead>
         <tbody>
-        {% for productCart in cart %}
-            {% for quantity, product in productCart %}
-                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
-                    <td>{{ product.name }}</td>
-                    <td>{{ (product.price / 100)|format_currency('EUR') }}</td>
-                    <td>{{ quantity }}</td>
-                    <td><img src="{{ asset('./img/' ~product.img) }}" alt="image de {{ product.name }}"></td>
-                    <td><a href="{{ path('app_add_cart', {redirect: 'app_cart', product: product.id, quantity: quantity, del: ""}) }}" class="btn btn-text">Enlever le produit</a></td>
-                </tr>
+        {% if cart|length > 0 or customsBox|length > 0 %}
+            {% for productCart in cart %}
+                {% for quantity, product in productCart %}
+                    <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                        <td>{{ product.name }}</td>
+                        <td>{{ (product.price / 100)|format_currency('EUR') }}</td>
+                        <td>{{ quantity }}</td>
+                        <td><img src="{{ asset('./img/' ~product.img) }}" alt="image de {{ product.name }}"></td>
+                        <td><a href="{{ path('app_add_cart', {redirect: 'app_cart', product: product.id, quantity: quantity, del: ""}) }}" class="btn btn-text">Enlever le produit</a></td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
+            {% for customBoxCart in customsBox %}
+                {% for quantity, customBox in customBoxCart%}
+                    <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
+                        <td>Boîte Customiser par vos soins !</td>
+                        <td>{{ (customBox.price / 100)|format_currency('EUR') }}</td>
+                        <td>{{ quantity }}</td>
+                        <td></td>
+                        <td><a href="{{ path('app_add_cart', {redirect: 'app_cart', customBox: customBox.id, quantity: quantity, del: ""}) }}" class="btn btn-text">Enlever le produit</a></td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+
         {% else %}
             <tr class="tr-odd">
                 <td colspan="4">Votre panier est vide !</td>
             </tr>
-        {% endfor %}
-        {% for customBoxCart in customsBox %}
-            {% for quantity, customBox in customBoxCart%}
-                <tr class="tr-{% if loop.index % 2 == 0 %}even{% else %}odd{% endif %}">
-                    <td>Boîte Customiser par vos soins !</td>
-                    <td>{{ (customBox.price / 100)|format_currency('EUR') }}</td>
-                    <td>{{ quantity }}</td>
-                    <td></td>
-                    <td>Vous n'avez pas la possibilité de l'enlever de votre panier pour le moment ! Excusez nous pour le désagrément !</td>
-                </tr>
-            {% endfor %}
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 

@@ -2,10 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\CustomBoxRepository;
 use App\Repository\OrderRepository;
-use App\Repository\UserRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,17 +68,6 @@ class AdminController extends AbstractController
             'products' => $products,
             'customsBox' => $customsBox,
             'price' => $price
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/customBox/{id}', name: 'app_admin_order_detail_custom_box')]
-    public function order_detail_custom_box(int $id, CustomBoxRepository $customBoxRepository): Response
-    {
-        $customBox = $customBoxRepository->find($id);
-
-        return $this->render('admin/order/orderDetailsCustomBox.html.twig', [
-            'positions' => $customBox->getPositions(),
         ]);
     }
 }
